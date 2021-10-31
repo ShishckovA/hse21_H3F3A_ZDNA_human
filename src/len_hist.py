@@ -1,7 +1,9 @@
 import pandas as pd
 import seaborn as sns
-sns.set(style='darkgrid')
+
 from matplotlib import pyplot as plt
+sns.set(style='darkgrid')
+
 
 out_dir = "../images"
 data_dir = "../data"
