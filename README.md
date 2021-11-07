@@ -51,6 +51,8 @@ python3 len_hist.py
 <img src="images/ENCFF933JKX_hg19-len-hist.png" width="300"/> <img src="images/ENCFF480UVM_hg19-len-hist.png" width="300"/>
 <img src="images/ZDNA-merge-len-hist.png" width="300"/>
 
+Тут мы посмотрели и распределение длин участков вторичной структуры ДНК.
+
 С помощью написанного скрипта пофильтровал длины.
 
 ```bash
@@ -89,11 +91,37 @@ python3 filter_peaks.py
                                            data/ncbi_ref_seq_Introns_plus_0_bases_at_each_end.txt \
                                            -names "3' UTR Exones" "5' UTR Exones" \ 
                                            "Promote, 1kb" "Coding exons" "Introns" \
-                                           -wb > data/DeepZ-filtered-intersect.bed```
+                                           -wb > data/DeepZ-filtered-intersect.bed
+```
+
 Для остальных файлов (`zhunt-filtered.bed`, `ENCFF480UVM_hg19-filtered.bed`, `ENCFF933JKX_hg19-filtered.bed`, `ZDNA-merge.bed`) команды аналогичны.
 
-Далее, с помощю 
+Далее, с помощю скрипта построил круговые диаграммы.
 
+```bash
+cd src
+python3 plot_pie_charts.py
+```
+
+Тут можно видеть и данные про пересечения на участки вторичной структуры ДНК.
+
+##Анализ пересечения гистоновой метки и вторичной структуры ДНК
+
+Объединяем все гистоновые метки в один файл, чтобы можно было удобнее искать пересечения со вторинчой структурой:
+
+```bash
+cat data/*hg19-filtered.bed | sort -k1,1 -k2,2n | ./bedtools merge > data/H3F3A_hg19-merge.bed
+```
+
+Теперь объекдинённый файл можно пересекать с файлом участков вторичной структуры.
+
+```bash
+./bedtools intersect -a data/ZDNA-merge.bed -b data/H3F3A_hg19-merge.bed > data/H3F3A_hg19-intersect_with_ZDNA.bed
+```
+
+Полученные файлики можно визуализировать в геномном браузере -- я выбрал UCSC Browser. Для этого я использовал следующий код в геномный браузер:
+
+```
 track visibility=dense name="ENCFF480UVM_hg19-filtered.bed" color=50,50,200 description="ENCFF480UVM_hg19-filtered.bed"
 https://raw.githubusercontent.com/ShishckovA/hse21_H3F3A_ZDNA_human/master/data/ENCFF480UVM_hg19-filtered.bed
 track visibility=dense name="ENCFF933JKX_hg19-filtered.bed" color=50,50,200 description="ENCFF933JKX_hg19-filtered.bed"
@@ -104,6 +132,17 @@ track visibility=dense name="ZDNA" color=200,0,0 description="Merged ZDNA"
 https://raw.githubusercontent.com/ShishckovA/hse21_H3F3A_ZDNA_human/master/data/ZDNA-merge.bed
 track visibility=dense name="H3F3A_hg19 intersected with ZDNA" color=0,200,0 description="Intersected with ZDNA"
 https://raw.githubusercontent.com/ShishckovA/hse21_H3F3A_ZDNA_human/master/data/H3F3A_hg19-intersect_with_ZDNA.bed
+```
 
+Полученная сессия:
+<a href="https://genome.ucsc.edu/s/ShishckovA/H3F3A_ZDNA_human"> https://genome.ucsc.edu/s/ShishckovA/H3F3A_ZDNA_human</a>
+
+Пересечения, которые я получил:
+
+<img src="images/intersection1.png"/>
 chr10:99,255,603-99,260,002
+
+<br><br>
+
+<img src="images/intersection2.png"/>
 chr10:22,518,044-22,518,440

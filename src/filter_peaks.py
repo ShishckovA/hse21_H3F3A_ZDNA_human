@@ -29,10 +29,11 @@ for filename, includes_name_and_score, max_len in files_to_process:
     to_filter = lens < max_len
     df_filtered = df[to_filter]
 
-    plt.title(f"{filename}, number of peaks: {np.sum(to_filter)}")
+    plt.title(f"{filename} - filtered, number of peaks: {np.sum(to_filter)}")
     plt.hist(lens[to_filter], bins=30)
     plt.yscale("log")
     f.savefig(f"{out_dir}/{filename}-filtered-len-hist.pdf", bbox_inches="tight")
+    f.savefig(f"{out_dir}/{filename}-filtered-len-hist.png", bbox_inches="tight")
 
     df_filtered.sort_values(by=["chrom", "start"])
     df_filtered.to_csv(f"{data_dir}/{filename}-filtered.bed", header=None, sep="\t", index=None)

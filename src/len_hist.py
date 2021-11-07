@@ -24,3 +24,4 @@ for filename, includes_name_and_score in files_to_process:
     plt.hist(lens, bins=30)
     plt.yscale("log")
     f.savefig(f"{out_dir}/{filename}-len-hist.pdf", bbox_inches="tight")
+    f.savefig(f"{out_dir}/{filename}-len-hist.png", bbox_inches="tight")
