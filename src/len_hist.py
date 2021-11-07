@@ -8,7 +8,7 @@ sns.set(style='darkgrid')
 out_dir = "../images"
 data_dir = "../data"
 
-files_to_process = [("DeepZ", False), ("ENCFF480UVM_hg19", True), ("ENCFF933JKX_hg19", True), ("zhunt", False)]
+files_to_process = [("DeepZ", False), ("ENCFF480UVM_hg19", True), ("ENCFF933JKX_hg19", True), ("zhunt", False), ("ZDNA-merge", False)]
 
 for filename, includes_name_and_score in files_to_process:
     path = f"{data_dir}/{filename}.bed"
@@ -22,4 +22,5 @@ for filename, includes_name_and_score in files_to_process:
     plt.title(f"{filename}, number of peaks: {len(df)}")
     lens = df["end"] - df["start"]
     plt.hist(lens, bins=30)
+    plt.yscale("log")
     f.savefig(f"{out_dir}/{filename}-len-hist.pdf", bbox_inches="tight")
