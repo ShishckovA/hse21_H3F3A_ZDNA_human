@@ -1,6 +1,8 @@
 # Домашнее задание 1
 
-##### Поиск и изучение участков генома, определенная гистоновая метка присутствует в местах образования одной из вторичных структур ДНК
+## Цель работы
+
+Поиск и изучение участков генома, определенная гистоновая метка присутствует в местах образования одной из вторичных структур ДНК. Закрепление материалов, пройденных на лекциях и семинарах. Расширение умений работы с .bed-файлами, их обработкой и визуализацией.
 
 ## Скачивание данных
 
@@ -159,3 +161,45 @@ chr10:22,518,044-22,518,440
 ```bash
 bedtools intersect -a data/H3F3A_hg19-intersect_with_ZDNA.bed -b data/hg19-genes.bed -wb > data/H3F3A_ZDNA_genes.bed
 ```
+
+Далее, чтобы создать файлы с уникальными и повторяющимися генами, а также распечатать общее число пересечений с генами и уникальные пересечения, воспользуемся таким кодом:
+
+```python
+df_genes = pd.read_csv("data/H3F3A_ZDNA_genes.bed", sep="\t", comment="#", header=None, names=["chr", "s1", "e1", "chrom", "cdsStart", "cdsEnd", "bin", "name", "strand", "txStart", "txEnd",  "exonCount", "exonStarts", "exonEnds", "score", "name2", "cdsStartStat", "cdsEndStat", "exonFrames"])
+with open("data/unique_genes.txt", "w") as f:
+    for gene in df_genes.name2.unique():
+        print(gene, file=f)
+with open("data/all_genes.txt", "w") as f:
+    for gene in df_genes.name2:
+        print(gene, file=f)
+
+print(len(df_genes.name2.unique()))
+print(len(df_genes.name2))
+```
+
+В итоге мы получили, что общее число пересечений -- *13234*, число уникальных пересеченйи -- *2712*.
+
+С помощью полученных файлов запустим GO-анализ на сайте <a href="http://pantherdb.org/">http://pantherdb.org/</a>
+
+Вставим полученные гены в поле IDs, выбиерем организм "Homo sapiens" и выберем GO biological process complete. В качестве референсного списка выберем Homo sapiens genes.
+
+Полученный результат анализа:
+
+<img src="images/GO-analyze.png"/>
+
+Отчёт по анализу находится в файле `data/pantherdb_GO_analysis.txt`.
+
+Поскольку запуск производился с помощью Google Colab, считаю, что не лишним будет указать ссылку на ноутбук:
+.<a href="https://colab.research.google.com/drive/1iCSeP-graQsdMVOwBe7eYMaB43ALJoCA?usp=sharing"> 
+https://colab.research.google.com/drive/1iCSeP-graQsdMVOwBe7eYMaB43ALJoCA?usp=sharing</a>.
+
+Там пояснений чуть меньше, зато весь код собран в одном месте и воспроизводим.
+
+
+## Выводы
+
+В этой работе я на практике самостоятельно ещё раз увидел, что такое .bed файлы с гистнововыми метками. Познакомился и могу использовать программу bedtools. Научился искать пересечение пиков в UCSC-браузере, а также открыл для себя GO-анализ.
+
+
+Спасибо!
+
