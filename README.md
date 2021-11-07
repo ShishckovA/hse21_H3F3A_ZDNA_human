@@ -1,4 +1,4 @@
-#Домашнее задание 1
+# Домашнее задание 1
 
 ##### Поиск и изучение участков генома, определенная гистоновая метка присутствует в местах образования одной из вторичных структур ДНК
 
@@ -29,12 +29,12 @@ https://www.encodeproject.org/experiments/ENCSR562SRW/
 Объединил два файлика:
 
 ```bash
-cat data/DeepZ.bed data/zhunt.bed | sort -k1,1 -k2,2n | ./bedtools merge > data/ZDNA-merge.bed
+cat data/DeepZ.bed data/zhunt.bed | sort -k1,1 -k2,2n | bedtools merge > data/ZDNA-merge.bed
 ```
 
 Создал репозиторий, выбрал имя -- hse21_H3F3A_ZDNA_human.
 
-##Анализ пиков гистоновой метки
+## Анализ пиков гистоновой метки
 
 Переместил все файлы .bed в папку data. Создал папку images и src: в первой будут лежать картинки, во второй -- исходные коды.
 
@@ -84,7 +84,7 @@ python3 filter_peaks.py
 
 Объединение для файла `DeepZ-filtered.bed` выглядит так:
 ```bash
-!./bedtools intersect -a data/DeepZ-filtered.bed -b data/ncbi_ref_seq_3_UTR_Exons.txt \
+bedtools intersect -a data/DeepZ-filtered.bed -b data/ncbi_ref_seq_3_UTR_Exons.txt \
                                            data/ncbi_ref_seq_5_UTR_Exons.txt \
                                            data/ncbi_ref_seq_Downstream_by_1000_bases.txt \
                                            data/ncbi_ref_seq_Coding_Exons.txt \
@@ -103,20 +103,24 @@ cd src
 python3 plot_pie_charts.py
 ```
 
+<img src="images/pie-chart-ENCFF480UVM_hg19-filtered.png" width="300"/> <img src="images/pie-chart-ENCFF933JKX_hg19-filtered.png" width="300"/>
+<img src="images/pie-chart-zhunt-filtered.png" width="300"/> <img src="images/pie-chart-deepZ-filtered.png" width="300"/>
+<img src="images/pie-chart-ZDNA-merge.png" width="300"/>
+
 Тут можно видеть и данные про пересечения на участки вторичной структуры ДНК.
 
-##Анализ пересечения гистоновой метки и вторичной структуры ДНК
+## Анализ пересечения гистоновой метки и вторичной структуры ДНК
 
 Объединяем все гистоновые метки в один файл, чтобы можно было удобнее искать пересечения со вторинчой структурой:
 
 ```bash
-cat data/*hg19-filtered.bed | sort -k1,1 -k2,2n | ./bedtools merge > data/H3F3A_hg19-merge.bed
+cat data/*hg19-filtered.bed | sort -k1,1 -k2,2n | bedtools merge > data/H3F3A_hg19-merge.bed
 ```
 
 Теперь объекдинённый файл можно пересекать с файлом участков вторичной структуры.
 
 ```bash
-./bedtools intersect -a data/ZDNA-merge.bed -b data/H3F3A_hg19-merge.bed > data/H3F3A_hg19-intersect_with_ZDNA.bed
+bedtools intersect -a data/ZDNA-merge.bed -b data/H3F3A_hg19-merge.bed > data/H3F3A_hg19-intersect_with_ZDNA.bed
 ```
 
 Полученные файлики можно визуализировать в геномном браузере -- я выбрал UCSC Browser. Для этого я использовал следующий код в геномный браузер:
@@ -146,3 +150,12 @@ chr10:99,255,603-99,260,002
 
 <img src="images/intersection2.png"/>
 chr10:22,518,044-22,518,440
+
+
+
+Чтобы ассоциировать полученные пересечения с ближайшими генами, скачаем из UCSC данные по генам и запустим `bedtools intersect`:
+
+
+```bash
+bedtools intersect -a data/H3F3A_hg19-intersect_with_ZDNA.bed -b data/hg19-genes.bed -wb > data/H3F3A_ZDNA_genes.bed
+```
