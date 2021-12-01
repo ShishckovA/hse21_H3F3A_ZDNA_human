@@ -203,3 +203,9 @@ https://colab.research.google.com/drive/1iCSeP-graQsdMVOwBe7eYMaB43ALJoCA?usp=sh
 
 Спасибо!
 
+
+# Домашнее задание 2
+
+Код выложил в репозиторий, [сюда](HW2_bio.ipynb).
+
+Также на всякий случай создал [второй репозиторий](https://github.com/ShishckovA/hse21_H3F3A_HW02), в котором выложил немного заранее. Там есть файл с кратким пояснением того, что я делал.
